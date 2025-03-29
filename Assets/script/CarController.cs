@@ -155,25 +155,7 @@ public class CarController : MonoBehaviour
         return currentHP;
     }
 
-    void OnCollisionEnter(Collision collision)
-{
-    if (collision.gameObject.CompareTag("Mud")) // พื้นโคลน
-    {
-        rb.drag = 3f; // เพิ่มแรงเสียดทาน
-    }
-    else if (collision.gameObject.CompareTag("Sand")) // พื้นทราย
-    {
-        rb.drag = 2f;
-    }
-    else if (collision.gameObject.CompareTag("Ice")) // พื้นน้ำแข็ง
-    {
-        rb.drag = 0.1f; // ลดแรงเสียดทานให้ลื่น
-    }
-}
+   
 
-void OnCollisionExit(Collision collision)
-{
-    rb.drag = 0.05f; // กลับไปเป็นค่าเริ่มต้น
-}
 
 }
