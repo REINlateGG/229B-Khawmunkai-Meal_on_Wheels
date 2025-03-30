@@ -8,6 +8,8 @@ TagManager:
   - Ground
   - Obstacle
   - Goal
+  - FxTemporaire
+  - HealthPickup
   layers:
   - Default
   - TransparentFX

@@ -1,26 +1,35 @@
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class SmoothCameraFollow : MonoBehaviour
-{
-    public Transform target;  // รถที่กล้องจะตาม
-    public Vector3 offset = new Vector3(0, 5, -10);  // ตำแหน่งของกล้องด้านหลังรถ
-    public float followSpeed = 10f;  // ความเร็วในการตาม
-    public float rotationSpeed = 5f;  // ความเร็วในการหมุน
+public class CameraFollow : MonoBehaviour {
 
-    private Vector3 velocity = Vector3.zero;
+	public Transform carTransform;
+	[Range(1, 10)]
+	public float followSpeed = 2;
+	[Range(1, 10)]
+	public float lookSpeed = 5;
+	Vector3 initialCameraPosition;
+	Vector3 initialCarPosition;
+	Vector3 absoluteInitCameraPosition;
 
-    void LateUpdate()
-    {
-        if (target == null) return;
+	void Start(){
+		initialCameraPosition = gameObject.transform.position;
+		initialCarPosition = carTransform.position;
+		absoluteInitCameraPosition = initialCameraPosition - initialCarPosition;
+	}
 
-        // คำนวณตำแหน่งใหม่ของกล้อง
-        Vector3 targetPosition = target.position + target.TransformDirection(offset);
+	void FixedUpdate()
+	{
+		//Look at car
+		Vector3 _lookDirection = (new Vector3(carTransform.position.x, carTransform.position.y, carTransform.position.z)) - transform.position;
+		Quaternion _rot = Quaternion.LookRotation(_lookDirection, Vector3.up);
+		transform.rotation = Quaternion.Lerp(transform.rotation, _rot, lookSpeed * Time.deltaTime);
 
-        // ใช้ SmoothDamp เพื่อให้กล้องเคลื่อนที่นุ่มนวล
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, 1f / followSpeed);
+		//Move to car
+		Vector3 _targetPos = absoluteInitCameraPosition + carTransform.transform.position;
+		transform.position = Vector3.Lerp(transform.position, _targetPos, followSpeed * Time.deltaTime);
 
-        // หมุนกล้องให้หันไปทางรถอย่างนุ่มนวล
-        Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-    }
+	}
+
 }
